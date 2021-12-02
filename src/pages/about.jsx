@@ -1,5 +1,5 @@
 import React from "react"
-import CardV2 from "../components/Cardv2"
+import CardV2 from "../components/CardV2"
 import Layout from "../components/Layout"
 
 import Seo from "../components/seo"
