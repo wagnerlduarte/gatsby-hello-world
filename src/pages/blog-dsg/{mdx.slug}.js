@@ -3,7 +3,7 @@ import { graphql } from "gatsby"
 import { MDXRenderer } from "gatsby-plugin-mdx"
 import Layout from "../../components/layout"
 
-const BlogPost = ({ data }) => {
+export default function BlogPost({ data }) {
   return (
     <Layout pageTitle={data.mdx.frontmatter.title}>
       <h1>{data.mdx.frontmatter.title}</h1>
@@ -25,4 +25,26 @@ export const query = graphql`
   }
 `
 
-export default BlogPost
+export async function config() {
+  const { data } = graphql`
+    {
+      allMdx(filter: { frontmatter: { date: { lt: "2021-10-31" } } }) {
+        nodes {
+          frontmatter {
+            title
+            date
+          }
+          slug
+        }
+      }
+    }
+  `
+
+  const oldPosts = new Set(data.allMdx.nodes.map(n => n.slug))
+
+  return ({ params }) => {
+    return {
+      defer: oldPosts.has(params.slug),
+    }
+  }
+}
